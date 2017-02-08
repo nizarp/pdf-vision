@@ -1,0 +1,39 @@
+{
+    "name": "nizarp/pdf-vision",
+    "description": "Convert PDF file to text using Google Vision API",
+    "keywords": [
+        "nizarp",
+        "pdf-vision",
+        "pdf",
+        "convert",
+        "text",
+        "google-cloud-vision"
+    ],
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Mohamed Nisar",
+            "email": "nizarp@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.5.0",
+        "spatie/pdf-to-image": "~1.2",
+        "google/cloud": "^0.20.1",
+        "vlucas/phpdotenv": "^2.4"
+    },
+    "require-dev": {
+        "phpunit/phpunit" : "4.*"
+    },
+    "autoload": {
+    	"psr-4": {
+    	    "Nizarp\\PdfVision\\": "src"
+    	}
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Nizarp\\PdfVision\\Test\\": "tests"
+        }
+    }
+}
