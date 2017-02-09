@@ -27,6 +27,7 @@ Converting a pdf to text is easy.
 
 ```php
 $pdf = new Pdf($pathToPdf);
+$pdf->setEnvPath('/path/to/env/.env');
 echo $pdf->convertToText();
 ```
 
