@@ -1,13 +1,16 @@
 # Convert a pdf file to text (OCR)
 
-This package provides an easy to work with class to convert pdf's to text. It internally uses Google Cloud Vision API. You need to create an API key and add it to your project's `.env` file as follows: [Read about Google Cloud Vision API] (https://cloud.google.com/vision/)
+This package provides an easy to work with class to convert pdf's to text. It internally uses Google Cloud Vision API. You need to create an API key and add it to your project's `.env` file as follows:
 
 ```
 GOOGLE_VISION_PROJECTID=your-project-id
 GOOGLE_APPLICATION_CREDENTIALS=/Path/To/Your/KeyFile.json
 ```
 
-##how to get service key
+[Read about Google Cloud Vision API] (https://cloud.google.com/vision/)
+
+
+## How to get service key
 [Google Cloud Vision API Document](https://cloud.google.com/vision/docs/getting-started)
 
 ## Requirements
