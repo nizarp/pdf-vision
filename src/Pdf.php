@@ -10,9 +10,10 @@ class Pdf
 {
 	
 	protected $pdfFile;
+    protected $envFile;
     protected $basePath = '/Users/qbuser/Sites/images';
     protected $outputFormat = 'jpg';
-
+    
 	/**
      * @param string $pdfFile The path to the pdffile.
      *
@@ -29,6 +30,20 @@ class Pdf
     }
 
     /**
+     * Set base path to .env file
+     *
+     * @param string $envPath
+     */
+    public function setEnvPath($envFile)
+    {
+        if (!file_exists($envFile)) {
+            throw new Exception('.env file does not exist!', 1);
+        }
+
+        $this->envFile = $envFile;
+    }
+
+    /**
      * Convert the PDF file to Text
      *
      * @return string
@@ -39,13 +54,26 @@ class Pdf
         $pdfToImage = new \Spatie\PdfToImage\Pdf($this->pdfFile);
         $pdfToImage->setOutputFormat($this->outputFormat);
 
-        $images = $pdfToImage->saveAllPagesAsImages($this->basePath);
+        // Generate a random folder for each request
+        $path = $this->basePath . '/' . time() . '-' . substr(md5(rand()), 0, 7);
+        if(! mkdir($path)) {
+            throw new Exception('Unable to create directory for processing PDF file!', 1);
+        }
+        $images = $pdfToImage->saveAllPagesAsImages($path);
 
         if(!empty($images)) {
             foreach ($images as $image) {
+                
+                // Convert to text
                 $textData.= " ". $this->imageToText($image);
+
+                // Delete image after processing
+                unlink($image);
             }
         }
+
+        // Delete directory
+        rmdir($path);
 
         return $textData;
     }
@@ -58,7 +86,7 @@ class Pdf
     public function imageToText($image) {
 
         $response = '';        
-        $dotenv = new Dotenv(__DIR__);
+        $dotenv = new Dotenv(dirname($this->envFile));
         $dotenv->load();
         
         // Instantiates a client
