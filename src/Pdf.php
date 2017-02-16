@@ -11,8 +11,8 @@ class Pdf
 	
 	protected $pdfFile;
     protected $envFile;
-    protected $basePath = '/Users/qbuser/Sites/images';
-    protected $outputFormat = 'jpg';
+    protected $basePath = 'images';
+    protected $outputFormat = 'png';
     
 	/**
      * @param string $pdfFile The path to the pdffile.
@@ -50,6 +50,9 @@ class Pdf
      */
     public function convertToText()
     {
+        // Set an unlimitted time limit because this probably going to take some time if the PDF file has too many pages.
+        set_time_limit(0);
+
         $textData = '';
         $pdfToImage = new \Spatie\PdfToImage\Pdf($this->pdfFile);
         $pdfToImage->setOutputFormat($this->outputFormat);
@@ -74,6 +77,10 @@ class Pdf
 
         // Delete directory
         rmdir($path);
+
+        if(trim($textData) == "") {
+            throw new Exception('PDF file is empty!', 1);
+        }
 
         return $textData;
     }
