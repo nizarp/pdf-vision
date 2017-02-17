@@ -11,11 +11,11 @@ before_install:
     printf "\n" | pecl install imagick-beta
 
 before_script:
-  - travis_retry composer clear-cache
+  - travis_retry composer clearcache
   - travis_retry composer update --prefer-stable --no-interaction --prefer-source
 
 script:
-  - phpunit
+  - vendor/phpunit/phpunit/phpunit
 
 after_script:
   - php vendor/bin/ocular code-coverage:upload --format=php-clover coverage.clover
