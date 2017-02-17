@@ -10,7 +10,7 @@ class Pdf
 {
 	
 	protected $pdfFile;
-    protected $envFile;
+    protected $dotEnv;
     protected $basePath = 'images';
     protected $outputFormat = 'png';
     
@@ -36,11 +36,15 @@ class Pdf
      */
     public function setEnvPath($envFile)
     {
-        if (!file_exists($envFile)) {
-            throw new Exception('.env file does not exist!', 1);
+        // Verify Google Vision API configuration
+        $this->dotEnv = new Dotenv(rtrim($envFile, '.env'));
+        $this->dotEnv->load();
+
+        if( !getenv('GOOGLE_VISION_PROJECTID') 
+            || !getenv('GOOGLE_APPLICATION_CREDENTIALS') ) {
+            throw new Exception("Google vision API key missing in .env file!");
         }
 
-        $this->envFile = $envFile;
     }
 
     /**
@@ -71,12 +75,18 @@ class Pdf
                 $textData.= " ". $this->imageToText($image);
 
                 // Delete image after processing
-                unlink($image);
+                if(!unlink($image)) {
+                    throw new Exception("Unable to delete image after processing!", 1);
+                }
             }
+        } else {
+            throw new Exception("Error converting PDF file to images!", 1);            
         }
 
         // Delete directory
-        rmdir($path);
+        if(!rmdir($path)) {
+            throw new Exception("Unable to delete temp directory!", 1);
+        }
 
         if(trim($textData) == "") {
             throw new Exception('PDF file is empty!', 1);
@@ -86,15 +96,13 @@ class Pdf
     }
 
     /**
-     * Conver the image to text using Vision API
+     * Convert the image to text using Vision API
      *
      * @return string
      */
     public function imageToText($image) {
 
-        $response = '';        
-        $dotenv = new Dotenv(dirname($this->envFile));
-        $dotenv->load();
+        $response = '';
         
         // Instantiates a client
         $vision = new VisionClient([

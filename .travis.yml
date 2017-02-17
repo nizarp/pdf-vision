@@ -11,8 +11,7 @@ before_install:
     printf "\n" | pecl install imagick-beta
 
 before_script:
-  - travis_retry composer clearcache
-  - travis_retry composer update --prefer-stable --no-interaction --prefer-source
+  - composer update --prefer-stable --no-interaction --prefer-source
 
 script:
   - vendor/phpunit/phpunit/phpunit

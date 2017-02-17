@@ -33,4 +33,27 @@ class pdfVisionTest extends TestCase
         $this->expectExceptionMessage('PDF file does not exist!');
         new Pdf('pdfdoesnotexists.pdf');
     }
+
+    /** @test */
+    public function should_throw_an_exception_when_a_non_existing_env_file_is_set()
+    {
+        $this->expectExceptionMessage('Unable to read the environment file at /invalid/env/path/.env.');
+        $pdf = new Pdf($this->single_page);
+        $pdf->setEnvPath('/invalid/env/path/.env');
+
+        unset($pdf);
+    }
+
+    /** @test */
+    public function should_throw_an_exception_when_pdf_file_is_empty()
+    {
+
+        $this->expectExceptionMessage('PDF file is empty!');
+        
+        $pdf = new Pdf($this->blank);
+        $pdf->setEnvPath(__DIR__ . '/../.env');
+        $pdf->convertToText();
+
+        unset($pdf);
+    }
 }
