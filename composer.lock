@@ -99,16 +99,16 @@
         },
         {
             "name": "google/cloud",
-            "version": "v0.20.1",
+            "version": "v0.20.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/GoogleCloudPlatform/google-cloud-php.git",
-                "reference": "e7613334527412ebd03d61a9174d61e101d40aa3"
+                "reference": "7175deb3c4b07d790a52214ba209986404857d51"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/GoogleCloudPlatform/google-cloud-php/zipball/e7613334527412ebd03d61a9174d61e101d40aa3",
-                "reference": "e7613334527412ebd03d61a9174d61e101d40aa3",
+                "url": "https://api.github.com/repos/GoogleCloudPlatform/google-cloud-php/zipball/7175deb3c4b07d790a52214ba209986404857d51",
+                "reference": "7175deb3c4b07d790a52214ba209986404857d51",
                 "shasum": ""
             },
             "require": {
@@ -122,8 +122,8 @@
             },
             "require-dev": {
                 "erusev/parsedown": "^1.6",
-                "google/gax": "^0.5",
-                "google/proto-client-php": "^0.6",
+                "google/gax": "^0.6",
+                "google/proto-client-php": "^0.7",
                 "james-heinrich/getid3": "^1.9",
                 "league/json-guard": "^0.3",
                 "phpdocumentor/reflection": "^3.0",
@@ -179,9 +179,10 @@
                 "stackdriver logging",
                 "storage",
                 "translate",
+                "translation",
                 "vision"
             ],
-            "time": "2016-12-28T21:31:30+00:00"
+            "time": "2017-02-10T15:09:33+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
