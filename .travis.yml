@@ -26,7 +26,7 @@ before_install:
     printf "\n" | pecl install imagick-beta
 
 before_script:
-  - travis_retry composer self-update
+  - travis_retry composer clear-cache
   - travis_retry composer update ${COMPOSER_FLAGS} --no-interaction --prefer-source
 
 script:
