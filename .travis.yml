@@ -4,7 +4,8 @@ php:
 - hhvm
 before_install:
 - openssl aes-256-cbc -K $encrypted_e0f378eeade2_key -iv $encrypted_e0f378eeade2_iv
-  -in credentials.json.enc -out credentials.json -d
+  -in credentials.tar.gz.enc -out credentials.tar.gz -d
+- tar -xzf credentials.tar.gz
 - sudo add-apt-repository -y ppa:moti-p/cc sudo apt-get update sudo apt-get -y --reinstall
   install imagemagick printf "\n" | pecl install imagick-beta
 before_script:
@@ -13,7 +14,3 @@ script:
 - vendor/phpunit/phpunit/phpunit
 after_script:
 - php vendor/bin/ocular code-coverage:upload --format=php-clover coverage.clover
-env:
-  global:
-  - secure: jlpWWuKwEUJzZ92vW2F/+vvVV9vXN0Mrb8NzPI8exFNc+uKvlY1UQfheNHCJOr9uPTftF7Y+9jXOF+ycSRFnj7bNkm9or/L4Dcz6Nmh7rWx5OTCca5QQnkuCmz/Y5V522eFNbkEsoiYAzMokjkSP1wKGxGcfifD8AlMRpXIBCAtdxx3KCGV+5x5h82JPGcGurjPiwJNueLsGy62CSy/JpYSt1K+WVv8f+Q2U87mMrw8D/zGNwNtrsz421blKZ00STbS5ETwVBgdbs7oJa+7Yo//EEfaXVhxTCI5QIv3YeNgDzF3o/Q6yLNS4b++IAaHHE06m+lbqyfz/9PyeLAbVkP/om0JAyK0RbdW+OC/dpsHwVUoZlZjc4mBvYzPKWP2web6yHNOQXrii/obBA6NcHoi0rIvRFA3Yveozx92pLjPGUgx7ENtQ4Ok//Kvc3AvAtS9soKFVfpatjt+5N5FAbzVXNja7IVrdF/FCDqqzAJAKMolW6yuVq2wUAsYx49Tjl4TQxjgVX9kEgBJC2qD4WzW7MyVqheVtXa5a+nk7HCbQB6W+dBoINp4BVVF85e5ViAqz6Ef0GrkuSo7M9P1nFZ5JS/tMqJPPB1CsJ5UIN3w2POOEzGglkKlY7Av+UFX3Tw9oZgwO/UzMN9AEdbDxGuiOv/eDV1Y0F7pZSAtmjMQ=
-  - secure: O97WoTNVT33o0dfkX82bNijTHB22vLA/gyTEiNcQErgbq+muGzSn7dpL5GsNCxeWkmoGzqiBbQDzVURqRs82CUGTJ1En28xIaM3N+yT5yy+x7jvioWt9djqdKIhJ5wApBIjBqHoogLfO4dwVSBYPy8QvCj3mJ2WWltKYZugB2yGcZ8bNm4uP/UKkJ5Me7Q/DNJGHYiD6OhYhVkvIx8Yv+QPAaG+A6waziOv9YwVLOOF6ZNp71phl37fWjNkwNtg1Y6T2klHIBPIMg37eX5jxfdRWsbUlsvnOYljXHvAZSZ7PAF2N2Oh+OFkdSP3yEyU+4lkeZ5uimGeBo5CjvTAFVeGr8NuvG7NmannenQlE/AV2QWZgofgeSNfxaMaH3zDWOoO/wZ6ZQOFv62PJvUPYnDt7is+HvYEeMbP6DWQMIEXXIInteQuw2WGCVQTwAP0t7ZxAvaKcXzeohHqSmMQrn0VvsNtO4OZ3U2duZP+qQVTh5r5/6RFt12rVUMsrkx4Kb0dLX+DOm1ohJrlKHmVUZXEWxCZKJkWdsAFvIuk8BRv0T3RizILlk7iQmPMV1bAgOT4yqodPjSDmjsp9Y7gDkFl1QL918Pi40MhB4MgcfaMtT/fvxIN49E8BP5IsJQ/3FDmDCLRI3ZIyvI50aatl1kWOqu99Pkx7xuVrlf7clvY=
