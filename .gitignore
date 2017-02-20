@@ -1,5 +1,5 @@
 .env
 vendor/
 .DS_Store
-credentials.json  
-.gitignore                                                                                                                                                                                           
+.gitignore
+build/                                                                                                                                                                                           
