@@ -69,15 +69,19 @@ class Pdf
         $images = $pdfToImage->saveAllPagesAsImages($path);
 
         if(!empty($images)) {
+
+            $page = 1;
             foreach ($images as $image) {
                 
                 // Convert to text
-                $textData.= " ". $this->imageToText($image);
+                $textData.= (($page > 1) ? " " : "") . $this->imageToText($image);
 
                 // Delete image after processing
                 if(!unlink($image)) {
                     throw new Exception("Unable to delete image after processing!", 1);
                 }
+
+                $page++;
             }
         } else {
             throw new Exception("Error converting PDF file to images!", 1);            
@@ -114,10 +118,9 @@ class Pdf
         
         // Performs OCR on the image file
         $result = $vision->annotate($image);
-        
-        // Collects and appends text data
-        foreach ((array) $result->text() as $text) {
-            $response.= ($text->description());
+        $resultText = $result->text();
+        if(isset($resultText[0]) && !empty($resultText[0]->description())) {
+            $response = $resultText[0]->description();
         }
 
         return $response;
