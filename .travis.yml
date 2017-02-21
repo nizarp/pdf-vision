@@ -1,16 +1,18 @@
 language: php
 php:
-- 5.6
-- 7.0
+  - 5.6
+  - 7.0
 before_install:
-- openssl aes-256-cbc -K $encrypted_e0f378eeade2_key -iv $encrypted_e0f378eeade2_iv
-  -in credentials.tar.gz.enc -out credentials.tar.gz -d
-- tar -xzf credentials.tar.gz
-- sudo add-apt-repository -y ppa:moti-p/cc sudo apt-get update sudo apt-get -y --reinstall
-  install imagemagick printf "\n" | pecl install imagick-beta
+  - openssl aes-256-cbc -K $encrypted_e0f378eeade2_key -iv $encrypted_e0f378eeade2_iv
+    -in credentials.tar.gz.enc -out credentials.tar.gz -d
+  - tar -xzf credentials.tar.gz
+  - sudo add-apt-repository -y ppa:moti-p/cc sudo apt-get update sudo apt-get -y --reinstall
+    install imagemagick printf "\n" | pecl install imagick-beta
+services:
+  - redis-server
 before_script:
-- composer update --prefer-stable --no-interaction --prefer-source
+  - composer update --prefer-stable --no-interaction --prefer-source
 script:
-- vendor/phpunit/phpunit/phpunit
+  - vendor/phpunit/phpunit/phpunit
 after_script:
-- php vendor/bin/ocular code-coverage:upload --format=php-clover coverage.clover
+  - php vendor/bin/ocular code-coverage:upload --format=php-clover coverage.clover
