@@ -4,7 +4,6 @@ ini_set('display_errors', 1);
 
 use Nizarp\PdfVision\Pdf;
 use PHPUnit\Framework\TestCase;
-use Predis\Client;
 
 class pdfVisionTest extends TestCase
 {
@@ -59,20 +58,9 @@ class pdfVisionTest extends TestCase
     {
         $expectedText = "This is the first page text.\nHeading\n";
 
-        $client = new Client();        
-
-        // Retrieve date from cache if it exists
-        if(!is_null($client->get('single_page'))) {
-            $value = $client->get('single_page');
-
-        } else {
-            $pdf = new Pdf($this->single_page);
-            $pdf->setEnvPath(__DIR__ . '/../.env');
-            $value = $pdf->convertToText();
-
-            // Update value to cache
-            $client->set('single_page', $value);
-        }
+        $pdf = new Pdf($this->single_page);
+        $pdf->setEnvPath(__DIR__ . '/../.env');
+        $value = $pdf->convertToText();
 
         $this->assertEquals(
             $expectedText,
@@ -83,22 +71,11 @@ class pdfVisionTest extends TestCase
     /** @test */
     public function should_return_text_from_multiple_page_text_pdf()
     {
-        $expectedText = "This is the first page text.\nHeading\n This is the second page text\n";
-       
-        $client = new Client();        
+        $expectedText = "This is the first page text.\nHeading\n This is the second page text\n";   
 
-        // Retrieve date from cache if it exists
-        if(!is_null($client->get('multiple_page'))) {
-            $value = $client->get('multiple_page');
-
-        } else {
-            $pdf = new Pdf($this->multiple_page);
-            $pdf->setEnvPath(__DIR__ . '/../.env');
-            $value = $pdf->convertToText();
-
-            // Update value to cache
-            $client->set('multiple_page', $value);
-        }
+        $pdf = new Pdf($this->multiple_page);
+        $pdf->setEnvPath(__DIR__ . '/../.env');
+        $value = $pdf->convertToText();
 
         $this->assertEquals(
             $expectedText,
@@ -122,20 +99,9 @@ class pdfVisionTest extends TestCase
     {
         $expectedText = "This is the first page text.\nHeading\n";
 
-        $client = new Client();        
-
-        // Retrieve date from cache if it exists
-        if(!is_null($client->get('single_page_ocr'))) {
-            $value = $client->get('single_page_ocr');
-
-        } else {
-            $pdf = new Pdf($this->single_page_ocr);
-            $pdf->setEnvPath(__DIR__ . '/../.env');
-            $value = $pdf->convertToText();
-
-            // Update value to cache
-            $client->set('single_page_ocr', $value);
-        }
+        $pdf = new Pdf($this->single_page_ocr);
+        $pdf->setEnvPath(__DIR__ . '/../.env');
+        $value = $pdf->convertToText();
 
         $this->assertEquals(
             $expectedText,
@@ -147,21 +113,10 @@ class pdfVisionTest extends TestCase
     public function should_return_text_from_multiple_page_image_pdf()
     {
         $expectedText = "This is the first page text.\nHeading\n This is the second page text\n";
-       
-        $client = new Client();        
 
-        // Retrieve date from cache if it exists
-        if(!is_null($client->get('multiple_page_ocr'))) {
-            $value = $client->get('multiple_page_ocr');
-
-        } else {
-            $pdf = new Pdf($this->multiple_page_ocr);
-            $pdf->setEnvPath(__DIR__ . '/../.env');
-            $value = $pdf->convertToText();
-
-            // Update value to cache
-            $client->set('multiple_page_ocr', $value);
-        }
+        $pdf = new Pdf($this->multiple_page_ocr);
+        $pdf->setEnvPath(__DIR__ . '/../.env');
+        $value = $pdf->convertToText();
 
         $this->assertEquals(
             $expectedText,

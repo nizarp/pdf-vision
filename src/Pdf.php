@@ -3,8 +3,7 @@ namespace Nizarp\PdfVision;
 
 use Google\Cloud\Vision\VisionClient;
 use Dotenv\Dotenv;
-use File;
-use Exception;
+use Predis\Client;
 
 class Pdf
 {
@@ -22,8 +21,9 @@ class Pdf
     public function __construct($pdfFile)
     {
 
+        // Make sure the file exists
         if (!file_exists($pdfFile)) {
-            throw new Exception('PDF file does not exist!', 1);
+            throw new \Exception('PDF file does not exist!', 1);
         }
 
         $this->pdfFile = $pdfFile;
@@ -40,9 +40,10 @@ class Pdf
         $this->dotEnv = new Dotenv(rtrim($envFile, '.env'));
         $this->dotEnv->load();
 
+        // Check for config variables
         if( !getenv('GOOGLE_VISION_PROJECTID') 
             || !getenv('GOOGLE_APPLICATION_CREDENTIALS') ) {
-            throw new Exception("Google vision API key missing in .env file!");
+            throw new \Exception("Google vision API key missing in .env file!");
         }
 
     }
@@ -58,42 +59,56 @@ class Pdf
         set_time_limit(0);
 
         $textData = '';
-        $pdfToImage = new \Spatie\PdfToImage\Pdf($this->pdfFile);
-        $pdfToImage->setOutputFormat($this->outputFormat);
+        $fileMd5 = md5_file($this->pdfFile);
+        $client = new Client();
 
-        // Generate a random folder for each request
-        $path = $this->basePath . '/' . time() . '-' . substr(md5(rand()), 0, 7);
-        if(! mkdir($path)) {
-            throw new Exception('Unable to create directory for processing PDF file!', 1);
-        }
-        $images = $pdfToImage->saveAllPagesAsImages($path);
+        // Check if the file exists in Redis cache
+        if(!is_null($client->get($fileMd5))) {
+            $textData = $client->get($fileMd5);
 
-        if(!empty($images)) {
+        } else {
+            // Instantiates PdfToImage 
+            $pdfToImage = new \Spatie\PdfToImage\Pdf($this->pdfFile);
+            $pdfToImage->setOutputFormat($this->outputFormat);
 
-            $page = 1;
-            foreach ($images as $image) {
-                
-                // Convert to text
-                $textData.= (($page > 1) ? " " : "") . $this->imageToText($image);
+            // Generate a random folder for each request
+            $path = $this->basePath . '/' . time() . '-' . substr(md5(rand()), 0, 7);            
+            if(! mkdir($path)) {
+                throw new \Exception('Unable to create directory for processing PDF file!', 1);
+            }
 
-                // Delete image after processing
-                if(!unlink($image)) {
-                    throw new Exception("Unable to delete image after processing!", 1);
+            // Create images for each page
+            $images = $pdfToImage->saveAllPagesAsImages($path);
+
+            if(!empty($images)) {                
+                $page = 1;
+
+                foreach ($images as $image) {                    
+                    // Convert to text
+                    $textData.= (($page > 1) ? " " : "") . $this->imageToText($image);
+
+                    // Delete image after processing
+                    if(!unlink($image)) {
+                        throw new \Exception("Unable to delete image after processing!", 1);
+                    }
+
+                    $page++;
                 }
 
-                $page++;
+            } else {
+                throw new \Exception("Error converting PDF file to images!", 1);            
             }
-        } else {
-            throw new Exception("Error converting PDF file to images!", 1);            
-        }
 
-        // Delete directory
-        if(!rmdir($path)) {
-            throw new Exception("Unable to delete temp directory!", 1);
-        }
+            // Delete directory
+            if(!rmdir($path)) {
+                throw new \Exception("Unable to delete temp directory!", 1);
+            }
 
-        if(trim($textData) == "") {
-            throw new Exception('PDF file is empty!', 1);
+            if(trim($textData) == "") {
+                throw new \Exception('PDF file is empty!', 1);
+            }
+
+            $client->set($fileMd5, $textData);
         }
 
         return $textData;
@@ -107,8 +122,8 @@ class Pdf
     public function imageToText($image) {
 
         $response = '';
-        
-        // Instantiates a client
+       
+        // Instantiates Google Vision API request
         $vision = new VisionClient([
             'projectId' => getenv('GOOGLE_VISION_PROJECTID')
         ]);
