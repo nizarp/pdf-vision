@@ -7,7 +7,7 @@ GOOGLE_VISION_PROJECTID=your-project-id
 GOOGLE_APPLICATION_CREDENTIALS=/Path/To/Your/KeyFile.json
 ```
 
-[Read about Google Cloud Vision API] (https://cloud.google.com/vision/)
+[Read about Google Cloud Vision API](https://cloud.google.com/vision/)
 
 
 ## How to get service key
